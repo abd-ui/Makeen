@@ -1,5 +1,6 @@
 i = 1
 v = int(input("Number of vectors: "))
+all_vetors = []
 
 while i <= v:
     print("Enter Coord for S", str(i))
@@ -8,10 +9,14 @@ while i <= v:
     x2 = input("x2 = ")
     y2 = input("y2 = ")
 
-    Vectors = f"S{i}"
-    vector = [x1, y1]
+    name = f"S{i}"
+    vector = [x1, y1, x2, y2]
 
-    globals()[Vectors] = vector
-    print(Vectors, vector)
+    globals()[name] = vector
+    print(" ")
+    print(name, vector)
+    print(" ")
+    all_vetors.append(vector)
 
     i += 1
+print(all_vetors)
