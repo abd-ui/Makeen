@@ -1,5 +1,5 @@
 
-tons = 10
+tons = 20
 price = 1
 
 cost = tons * price
