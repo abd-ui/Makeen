@@ -1,22 +1,21 @@
+from math import *
+
 i = 1
 v = int(input("Number of vectors: "))
-all_vetors = []
-
+point1 = []
+point2 = []
 while i <= v:
     print("Enter Coord for S", str(i))
-    x1 = input("x1 = ")
-    y1 = input("y1 = ")
-    x2 = input("x2 = ")
-    y2 = input("y2 = ")
+    x1 = int(input("x1 = "))
+    point1.append(x1)
+    y1 = int(input("y1 = "))
+    point1.append(y1)
+    x2 = int(input("x2 = "))
+    point2.append(x2)
+    y2 = int(input("y2 = "))
+    point2.append(y2)
 
-    name = f"S{i}"
-    vector = [x1, y1, x2, y2]
-
-    globals()[name] = vector
-    print(" ")
-    print(name, vector)
-    print(" ")
-    all_vetors.append(vector)
+    distance = sqrt(((point1[0]-point2[0])**2)+((point1[1]-point2[1])**2))
+    print(distance)
 
     i += 1
-print(all_vetors)
