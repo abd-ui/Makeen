@@ -32,15 +32,16 @@
 #     print(y)
 #     y -= 7
 
-# y = str(input("Enter String: "))
+y = str(input("Enter String: "))
+i = 0
+while i < len(y):
+    print(ord(y[i]))
+    i += 1
 
-# for x in y:
-#     print(ord(x))
+# x = int(input())
+# count = 1
 
-x = int(input())
-count = 1
-
-while count <= x:
-    count += 1
-    if (x % count == 0):
-        print(count)
+# while count <= x:
+#     count += 1
+#     if (x % count == 0):
+#         print(count)
