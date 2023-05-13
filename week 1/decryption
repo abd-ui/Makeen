@@ -1,0 +1,4 @@
+string = "|rx#duh#juhdwh"
+
+for i in string:
+    print(chr(ord(i) - 3), end="")
