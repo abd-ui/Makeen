@@ -9,7 +9,6 @@ while user_input != '':
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": user_input},
         ]
     )
