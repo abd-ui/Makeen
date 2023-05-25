@@ -1,11 +1,8 @@
 import random
 import time
 import threading
-import signal
-import sys
 
-
-signal.alarm(30)
+begin = time.time()
 
 
 class Customer:
@@ -23,15 +20,21 @@ customers = []
 def add_customers(customers):
     i = 0
     while True:
-        processing_time = random.randint(1, 10)
-        customers.insert(0, Customer(
-            "Customer " + str(i + 1), processing_time))
-        time.sleep(random.randint(1, 10))
-        i += 1
+        end = time.time()
+        if end-begin < 30:
+            processing_time = random.randint(1, 5)
+            customers.insert(0, Customer(
+                "Customer " + str(i + 1), processing_time))
+            time.sleep(processing_time)
+            i += 1
+        else:
+            break
 
 
 def employee1(customers):
-    while True:
+    end = time.time()
+    while end-begin < 30:
+        end = time.time()
         while customers:
             customer = customers.pop()
             print("employee1 is serving " +
@@ -40,7 +43,9 @@ def employee1(customers):
 
 
 def employee2(customers):
-    while True:
+    end = time.time()
+    while end-begin < 30:
+        end = time.time()
         while customers:
             customer = customers.pop()
             print("employee2 is serving " +
@@ -49,7 +54,9 @@ def employee2(customers):
 
 
 def employee3(customers):
-    while True:
+    end = time.time()
+    while end-begin < 30:
+        end = time.time()
         while customers:
             customer = customers.pop()
             print("employee3 is serving " +
@@ -66,13 +73,11 @@ y.start()
 z = threading.Thread(target=employee3, args=(customers,))
 z.start()
 
-a.join()
+
 x.join()
 y.join()
 z.join()
 
 
 print("All customers has been served")
-print(threading.active_count())
-print(threading.enumerate())
-print(time.perf_counter())
+print(time.time() - begin)
