@@ -103,4 +103,13 @@ SELECT * FROM college
 INSERT INTO departmen(dp_code,dp_name,dp_col,dp_HOD)
 VALUES('INFS','Information Systems','COM','Dr. Kamla')
 
-SELECT * from departmen
+SELECT * from book
+
+
+ALTER TABLE student ADD SALARY DECIMAL (20,2);
+ALTER TABLE student DROP COLUMN SALARY;
+
+SELECT * FROM student
+
+ALTER TABLE student ALTER COLUMN st_cohort INT NOT NULL;
+ALTER TABLE borrower ADD CONSTRAINT br_mobile_unique UNIQUE (br_mobile);
