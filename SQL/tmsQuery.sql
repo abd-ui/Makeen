@@ -1,115 +1,246 @@
-CREATE TABLE college(
-    cl_code VARCHAR(3) PRIMARY KEY,
-    cl_name VARCHAR(40),
-    cl_dean VARCHAR(30)
+
+
+CREATE TABLE college  (
+    cl_code character(3),
+    cl_name varchar(40) NOT NULL,
+    cl_dean varchar(30),
+
+    constraint college_pk_clcode PRIMARY  KEY (cl_code)
 );
 
-ALTER TABLE college ALTER COLUMN cl_name VARCHAR(40) NOT NULL;
+CREATE TABLE department  (
+    dp_code character(4),
+    dp_name varchar(40) NOT NULL,
+    dp_hod varchar(30),
+    dp_col character(3), 
 
-CREATE TABLE student(
-    st_ID VARCHAR(6) PRIMARY KEY,
-    st_major VARCHAR(30),
-    st_cohort VARCHAR(4) NOT NULL
+    constraint department_pk_dpcode PRIMARY  KEY (dp_code),
+    constraint department_fk_dpcol FOREIGN KEY (dp_col) REFERENCES college (cl_code)
 );
 
-CREATE TABLE departmen(
-    dp_code CHAR(4),
-    dp_name VARCHAR(40) NOT NULL,
-    dp_HOD VARCHAR(30),
-    dp_col VARCHAR(3) 
+CREATE TABLE borrower  (
+    br_id numeric(6),
+    br_name varchar(40) NOT NULL,
+    br_dept character(4),
+    br_mobile# numeric(8), 
+    br_city varchar(20),
+    br_house# character(4),
+    br_type character(1),
 
-    FOREIGN KEY (dp_col) REFERENCES college(cl_code)
-    CONSTRAINT dep_pk PRIMARY KEY (dp_code)
+    constraint borrower_pk_brid PRIMARY  KEY (br_id),
+    constraint borrower_ch_brid CHECK (br_id > 0),
+    constraint borrower_ch_mobile# CHECK (br_mobile# > 90000000),
+    constraint borrower_ch_type CHECK (br_type in ('S','E')),
+    constraint borrower_fk_brdept FOREIGN KEY (br_dept) REFERENCES department (dp_code)
 );
 
-CREATE TABLE borrower(
-    br_ID VARCHAR(6),
-    br_name VARCHAR(30) NOT NULL,
-    br_dept CHAR(4),
-    br_mobile VARCHAR(8),
-    br_city VARCHAR(20),
-    br_house# VARCHAR(4),
-    br_type CHAR(1),
+CREATE TABLE student (
+    st_id numeric(6),
+    st_major varchar(30),
+    st_cohort numeric(4) not null,
 
-    CONSTRAINT br_pk PRIMARY KEY (br_ID),
-    CONSTRAINT br_mobile_check CHECK (br_mobile >= 90000000),
-    FOREIGN KEY (br_dept) REFERENCES departmen(dp_code)
+    constraint student_pk_stid PRIMARY  KEY (st_id),
+    constraint student_ch_stid CHECK (st_id > 0),
+    constraint student_fk_stid FOREIGN KEY (st_id) REFERENCES borrower (br_id)
 );
+
+
+CREATE TABLE employee (
+    em_id numeric(6),
+    em_office# varchar(30),
+    em_ext# numeric(4) not null,
+                      
+    constraint employee_pk_emid PRIMARY  KEY (em_id),
+    constraint employee_ch_emid CHECK (em_id > 0),
+    constraint employee_ch_ext# CHECK (em_ext# > 1000),
+    constraint employee_fk_emid FOREIGN KEY (em_id) REFERENCES borrower (br_id)
+); 
 
 CREATE TABLE book (
-    bk_ID VARCHAR(6),
-    bk_title VARCHAR(50),
-    bk_edition VARCHAR(2),
-    bk_#ofPages INT NOT NULL,
-    bk_totalcopies INT,
-    bk_remCopies INT,
+    bk_id numeric(6),
+    bk_title varchar(50) NOT NULL,
+    bk_edition numeric(2),
+    bk_#ofPages numeric(4),
+    bk_totalCopies numeric(5),
+    bk_remCopies numeric(5),
 
-    CONSTRAINT bk_key PRIMARY KEY (bk_ID),
-    CONSTRAINT bk_check_#pages check (bk_#ofPages > 0)
+    constraint book_pk_bkid PRIMARY  KEY (bk_id),
+    constraint book_ch_bkid CHECK (bk_id > 0),
+    constraint book_ch_bk#ofPages CHECK (bk_#ofPages > 0)
+); 
+
+CREATE TABLE bookTopic (
+    tp_bkid numeric(6),
+    tp_desc varchar(30) NOT NULL,
+
+    constraint bookTopic_fk_tpBkID FOREIGN KEY (tp_bkid) REFERENCES book (bk_id)
+);    
+
+CREATE TABLE course (
+    cr_code character(8),
+    cr_title varchar(40) NOT NULL,
+    cr_CH numeric(2),
+    cr_#ofSec numeric(2),
+    cr_dept character(4),
+    constraint course_pk_crcode PRIMARY  KEY (cr_code),
+    constraint course_ch_crCH CHECK (cr_CH > 0),
+    constraint course_ch_cr#ofSec CHECK (cr_#ofSec > 0),
+    constraint course_fk_crDept FOREIGN KEY (cr_dept) REFERENCES department (dp_code)
+);   
+
+CREATE TABLE CBlink (
+    li_crCode character(8),
+    li_bkId numeric(6),
+    li_usage character(1),
+    constraint CBlink_ch_liUsage CHECK (li_usage IN ('T','R')),
+    constraint CBlink_fk_liCrCode FOREIGN KEY (li_crCode) REFERENCES course (cr_code),
+    constraint CBlink_fk_liBkId FOREIGN KEY (li_bkID) REFERENCES book (bk_id)
 );
 
-CREATE TABLE booktopic (
-    tp_bkID VARCHAR(6),
-    tp_desc VARCHAR(30),
+CREATE TABLE regist (
+    re_brID numeric(6),
+    re_crCode character(8),
+    re_semester character(6) NOT NULL,
+    constraint regist_fk_reBrID FOREIGN KEY (re_brID) REFERENCES borrower (br_id),
+    constraint regist_fk_reCrCode FOREIGN KEY (re_crCode) REFERENCES course (cr_code)
+);       
+                              
 
-
-    FOREIGN KEY (tp_bkID) REFERENCES book(bk_ID)
-);
-
-CREATE TABLE course(
-    cr_code VARCHAR(8) PRIMARY KEY,
-    cr_title VARCHAR(40),
-    cr_ch INT CHECK (cr_ch > 0),
-    cr_#ofSec INT CHECK (cr_#ofSec > 0),
-    cr_dept CHAR(4),
-
-    FOREIGN KEY (cr_dept) REFERENCES departmen(dp_code)
-);
-
-CREATE TABLE link(
-    li_CrCode VARCHAR(8),
-    li_bkID VARCHAR(6),
-    li_usage CHAR(1),
-
-    FOREIGN KEY (li_CrCode) REFERENCES course(cr_code),
-    FOREIGN KEY (li_bkID) REFERENCES book(bk_ID)
-);
-
-CREATE TABLE regestiration(
-    re_brID VARCHAR(6),
-    re_crCode VARCHAR(8),
-    re_semester VARCHAR(6) NOT NULL,
-
-    FOREIGN KEY (re_brID) REFERENCES book(bk_ID),
-    FOREIGN KEY (re_crCode) REFERENCES course(cr_code)
-);
-
-CREATE TABLE issuing(
-    is_brID VARCHAR(6),
-    is_bkID VARCHAR(6),
-    is_dateTaken DATE NOT NULL,
+CREATE TABLE issuing (
+    is_brID numeric(6),
+    is_bkID numeric(6),
+    is_dateTaken DATE  NOT NULL,
     is_dateReturn DATE,
-
-    FOREIGN KEY (is_bkID) REFERENCES book(bk_ID),
-    FOREIGN KEY (is_brID) REFERENCES borrower(br_ID)
-
+    constraint issuning_ch_isDataReturn CHECK (is_dateReturn >= is_dateTaken),
+    constraint issuing_fk_isBrID FOREIGN KEY (is_brID) REFERENCES borrower (br_id),
+    constraint issuing_fk_isBkID FOREIGN KEY (is_bkID) REFERENCES book (bk_id)
 );
+                               
 
-INSERT INTO college(cl_code,cl_name,cl_dean)
-VALUES('COM','Economey','Prof.Fahim')
+INSERT INTO college VALUES('COM', 'Economy', 'Prof. Fahim');
 
-SELECT * FROM college
+INSERT INTO college VALUES('SCI', 'Science', 'Prof. Salma');
 
-INSERT INTO departmen(dp_code,dp_name,dp_col,dp_HOD)
-VALUES('INFS','Information Systems','COM','Dr. Kamla')
+INSERT INTO college VALUES('EDU', 'Education', 'Dr. Hamad');
 
-SELECT * from book
+INSERT INTO college VALUES('ART', 'Arts', 'Dr. Abdullah');
 
 
-ALTER TABLE student ADD SALARY DECIMAL (20,2);
-ALTER TABLE student DROP COLUMN SALARY;
 
-SELECT * FROM student
+INSERT INTO department VALUES('INFS','Information Systems','Dr. Kamla','COM');
 
-ALTER TABLE student ALTER COLUMN st_cohort INT NOT NULL;
-ALTER TABLE borrower ADD CONSTRAINT br_mobile_unique UNIQUE (br_mobile);
+INSERT INTO department VALUES('FINA','Finance','Dr. Salim','COM');
+
+INSERT INTO department VALUES('COMP','Computer Science','Dr. Zuhoor','SCI');
+
+INSERT INTO department VALUES('BIOL','Biology','Dr. Othman','SCI');
+
+INSERT INTO department VALUES('HIST','History','Dr. Said','EDU');
+
+INSERT INTO department VALUES('CHEM', 'Chemistry', 'Dr. Alaa', 'SCI');
+
+
+
+INSERT INTO borrower VALUES (92120,'Ali','INFS',99221133,'Seeb','231','S');
+
+INSERT INTO borrower VALUES (10021,'Said','INFS',91212129,'Seeb','100','S');
+
+INSERT INTO borrower VALUES (10023,'Muna','FINA', NULL, 'Barka','12','S');
+
+INSERT INTO borrower VALUES (3000,'Mohammed','COMP',90000009,'Seeb','777','E');
+
+INSERT INTO borrower VALUES (4000,'Nasser','INFS',99100199,'Sur','11','E');
+
+
+
+INSERT INTO student VALUES(92120,'INFS',2012);
+
+INSERT INTO student VALUES(10021,'INFS',2015);
+
+INSERT INTO student VALUES(10023,'FINA',2015);
+
+
+
+INSERT INTO employee VALUES(3000,'12',2221);
+
+INSERT INTO employee VALUES(4000,'15',1401);
+
+
+
+INSERT INTO book VALUES(1001,'Database1',2,450,150,65);
+
+INSERT INTO book VALUES(1002,'Database2',3,300,100,100);
+
+INSERT INTO book VALUES(2001,'Intro. to Finanace',1,300,75,40);
+
+INSERT INTO book VALUES(3001,'Basic Op Mgmt',1,320,100,77);
+
+INSERT INTO book VALUES(3002,'Chemistry Book',2,500,100,80);
+
+INSERT INTO book VALUES(4001,'Biology',1,345,100,100);
+
+INSERT INTO book VALUES(3003,'Management I',2,560,44,34);
+
+INSERT INTO book VALUES(1003,'Java Prog.',3,555,50,50);
+
+
+
+INSERT INTO bookTopic VALUES (1001,'Basic DB Skills');
+
+INSERT INTO bookTopic VALUES (1001,'ERD');
+
+INSERT INTO bookTopic VALUES (1001,'EERD');
+
+INSERT INTO bookTopic VALUES (1002,'SQL');
+
+INSERT INTO bookTopic VALUES (1002,'Pl/SQL');
+
+INSERT INTO bookTopic VALUES (3001,'Management Skills');
+
+
+
+INSERT INTO course VALUES('COMP4201', 'Database1', 3, 1,'COMP');
+
+INSERT INTO course VALUES('COMP4202', 'Database2', 3, 2,'COMP');
+
+INSERT INTO course VALUES('BIOL1000', 'Intro. To Biology', 3, 5,'BIOL');
+
+INSERT INTO course VALUES('CHEM2000', 'Advanced Chemistry', 2, 2,'CHEM');
+
+
+
+INSERT INTO CBlink VALUES('COMP4201',1001,'T');
+
+INSERT INTO CBlink VALUES('COMP4201',1002,'R');
+
+INSERT INTO CBlink VALUES('COMP4202',1002,'T');
+
+INSERT INTO CBlink VALUES('BIOL1000',4001,'T');
+
+INSERT INTO CBlink VALUES('CHEM2000',3002,'R');
+
+
+
+INSERT INTO regist VALUES(92120,'COMP4201','FL2015');
+
+INSERT INTO regist VALUES(10021,'COMP4202','FL2015');
+
+INSERT INTO regist VALUES(92120,'BIOL1000','FL2015');
+
+INSERT INTO regist VALUES(92120,'COMP4202','FL2016');
+
+INSERT INTO regist VALUES(10021,'CHEM2000','FL2016');
+
+
+
+INSERT INTO issuing VALUES(92120, 1001, '01-Sep-2015', '30-Oct-2015');
+
+INSERT INTO issuing VALUES(10021, 1002, '30-Oct-2016', NULL);
+
+INSERT INTO issuing VALUES(92120, 1002, '21-Feb-2015', '01-Jan-2016');
+
+INSERT INTO issuing VALUES(92120, 3002, '30-Mar-2016', NULL);
+
+INSERT INTO issuing VALUES(10021, 3002, '01-Dec-2014', NULL);
+
+SELECT * FROM issuing;
