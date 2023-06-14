@@ -243,4 +243,19 @@ INSERT INTO issuing VALUES(92120, 3002, '30-Mar-2016', NULL);
 
 INSERT INTO issuing VALUES(10021, 3002, '01-Dec-2014', NULL);
 
-SELECT * FROM issuing;
+SELECT * FROM borrower;
+
+SELECT br_name FROM borrower WHERE (br_city = 'seeb');
+
+SELECT max(bk_remCopies) FROM book;
+
+SELECT * FROM book
+WHERE bk_remCopies = (
+    SELECT MAX(bk_remCopies)
+    FROM book
+);
+
+SELECT cr_title, dp_name FROM course c, department d
+WHERE (c.cr_dept = d.dp_code);
+
+

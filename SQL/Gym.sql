@@ -62,3 +62,44 @@ CREATE TABLE Equipment (
     FOREIGN KEY (eq_gym_id) REFERENCES Gym(gym_id)
 );
 
+INSERT INTO Gym (gym_id, gym_name, gym_location, gym_contact#, gym_email)
+VALUES ('GYM1', 'PowerFit', 'Los Angeles', '12345678', 'info@powerfit.com');
+
+INSERT INTO Gym (gym_id, gym_name, gym_location, gym_contact#, gym_email)
+VALUES ('GYM2', 'IronStrong', 'New York', '87654321', 'info@ironstrong.com');
+
+INSERT INTO Gym (gym_id, gym_name, gym_location, gym_contact#, gym_email)
+VALUES ('GYM3', 'FlexGym', 'San Francisco', '55555555', 'info@flexgym.com');
+
+INSERT INTO Gym (gym_id, gym_name, gym_location, gym_contact#, gym_email)
+VALUES ('GYM4', 'EliteFitness', 'Miami', '98765432', 'info@elitefitness.com');
+
+
+INSERT INTO Trainer (t_id, t_name, t_address, t_mobile#, t_gender, t_gym_id)
+VALUES ('TRN001', 'John Smith', '123 Main St, Los Angeles', '11111111', 'M', 'GYM1');
+
+INSERT INTO Trainer (t_id, t_name, t_address, t_mobile#, t_gender, t_gym_id)
+VALUES ('TRN002', 'Emily Brown', '456 Oak Ave, New York', '22222222', 'F', 'GYM2');
+
+INSERT INTO Trainer (t_id, t_name, t_address, t_mobile#, t_gender, t_gym_id)
+VALUES ('TRN003', 'David Lee', '789 Pine St, San Francisco', '33333333', 'M', 'GYM3');
+
+INSERT INTO Trainer (t_id, t_name, t_address, t_mobile#, t_gender, t_gym_id)
+VALUES ('TRN004', 'Sarah Davis', '321 Elm St, Miami', '44444444', 'F', 'GYM4');
+
+
+INSERT INTO Membership (mr_id, mr_type)
+VALUES ('M001', 'Basic');
+
+INSERT INTO Membership (mr_id, mr_type)
+VALUES ('M002', 'Premium');
+
+INSERT INTO Membership (mr_id, mr_type)
+VALUES ('M003', 'Gold');
+
+INSERT INTO Membership (mr_id, mr_type)
+VALUES ('M004', 'VIP');
+
+
+
+SELECT * FROM Membership;
