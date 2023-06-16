@@ -259,3 +259,19 @@ SELECT cr_title, dp_name FROM course c, department d
 WHERE (c.cr_dept = d.dp_code);
 
 
+SELECT bk_title , cr_title
+FROM book , CBlink , course
+WHERE (bk_ID = li_bkId) AND (cr_code = li_crCode);
+
+
+SELECT bk_title , bk_totalcopies FROM book
+WHERE (bk_totalcopies > 50) AND (bk_totalcopies <= 100);
+
+SELECT br_name , br_dept FROM borrower
+WHERE (br_city = 'seeb')
+ORDER BY (br_dept);
+
+SELECT dp_name , SUM(bk_totalcopies)
+FROM department, book ,CBlink , course
+WHERE (bk_ID = li_bkId) AND (cr_code = li_crCode) AND (cr_dept = dp_code)
+GROUP BY (dp_name); 
